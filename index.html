@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Ways to Express Love - Interactive Lesson</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700;800&display=swap');
+
+        :root {
+            --color-companion: #7aff99;
+            --color-action: #ffea00;    
+            --color-speech: #66ffcc;    
+            --color-gifts: #cca8ff;     
+            --color-contact: #ffaa99;   
+            
+            /* Matched colors from your screenshot */
+            --bg-color: #fcf1eb; /* Soft peach background */
+            --title-pink: #d95a5a;
+            --title-blue: #4b7299;
+            --box-border: #ffb3b3;
+        }
+
+        body {
+            font-family: 'Nunito', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px 0 60px 0;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* --- Header & Step Badge --- */
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .scenario-badge {
+            display: inline-block;
+            background: #ff9e9e;
+            padding: 8px 30px;
+            border-radius: 40px;
+            font-size: 22px;
+            font-weight: 800;
+            color: #fff;
+            box-shadow: 0 4px 10px rgba(255, 158, 158, 0.4);
+        }
+
+        /* --- Styled Question Boxes (Matched to Screenshot) --- */
+        .question-box {
+            background: #ffffff;
+            border: 3px dashed var(--box-border);
+            border-radius: 35px;
+            padding: 15px 40px;
+            text-align: center;
+            margin-bottom: 20px;
+            max-width: 800px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+        }
+
+        .zh-question {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--title-pink);
+            margin: 0 0 5px 0;
+        }
+
+        .en-question {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--title-blue);
+            margin: 0;
+        }
+
+        /* --- Photo Container --- */
+        .photo-container {
+            width: 90%;
+            max-width: 600px;
+            height: 350px;
+            background: white;
+            border-radius: 25px;
+            padding: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        #scenario-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; 
+            border-radius: 15px;
+            transition: filter 0.1s;
+        }
+
+        .shuffling {
+            filter: blur(5px) brightness(1.1);
+            transform: scale(1.02);
+        }
+
+        .draw-text-overlay {
+            position: absolute;
+            background: rgba(255, 179, 179, 0.9);
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            padding: 15px 30px;
+            border-radius: 30px;
+            display: none;
+            z-index: 2;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .shuffling + .draw-text-overlay { display: block; }
+
+        /* --- Section 2 (Hidden initially) --- */
+        #task-2-section {
+            display: none; /* Hidden until button click */
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- Hearts Container --- */
+        .hearts-wrapper {
+            display: flex;
+            gap: 20px;
+            margin-top: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 900px;
+        }
+
+        .heart-box {
+            position: relative;
+            width: 130px;
+            height: 130px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform: scale(0.9);
+            opacity: 0.6;
+        }
+
+        .heart-box svg {
+            width: 100%;
+            height: 100%;
+            fill: var(--heart-color);
+            transition: all 0.3s ease;
+            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.1));
+        }
+
+        .heart-text {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none; 
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 5px rgba(255, 255, 255, 0.9);
+        }
+
+        .en-text { font-size: 14px; font-weight: 800; color: #333; margin-bottom: -2px; }
+        .zh-text { font-size: 22px; font-weight: 800; color: #333; }
+        .emoji { font-size: 20px; margin-top: 2px; }
+
+        /* --- Active States --- */
+        .heart-box.selected { transform: scale(1.1); opacity: 1; z-index: 5; }
+        .heart-box.selected svg { filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2)) drop-shadow(0 0 20px var(--heart-color)); }
+        .bounce { animation: pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+
+        @keyframes pop {
+            0% { transform: scale(1.1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1.1); }
+        }
+
+        /* --- Controls --- */
+        .controls { 
+            display: flex; 
+            gap: 20px; 
+            z-index: 10; 
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 15px 35px;
+            font-size: 22px;
+            font-weight: 800;
+            font-family: inherit;
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        button:active { transform: scale(0.95); }
+
+        /* The Big Reveal Button */
+        #reveal-btn { background-color: #ff85a2; }
+        #reveal-btn:hover { background-color: #ff6b8f; transform: translateY(-3px);}
+
+        /* Next / Summary Buttons */
+        #next-btn { background-color: #64b5f6; display: none; }
+        #next-btn:hover { background-color: #42a5f5; transform: translateY(-3px);}
+        
+        #summary-btn {
+            background: linear-gradient(45deg, #ffaa33, #ff5c5c);
+            display: none; 
+        }
+        #summary-btn:hover { transform: translateY(-3px);}
+
+        /* --- Summary Overlay (Kept the same) --- */
+        #summary-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(252, 241, 235, 0.95);
+            z-index: 1000; display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.5s ease;
+            backdrop-filter: blur(5px); overflow-y: auto;
+        }
+
+        #summary-overlay.active { opacity: 1; pointer-events: all; }
+
+        .summary-content {
+            background: white; padding: 40px; border-radius: 35px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            max-width: 800px; width: 90%; text-align: center;
+            transform: scale(0.8); transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin: 20px 0; border: 3px dashed var(--box-border);
+        }
+
+        #summary-overlay.active .summary-content { transform: scale(1); }
+        .summary-content h2 { font-size: 32px; color: var(--title-pink); margin-top: 0; margin-bottom: 15px; }
+
+        .total-score-box {
+            background: #fff0f0; color: #d15656; font-size: 24px; font-weight: 800;
+            padding: 10px 30px; border-radius: 50px; display: inline-block;
+            margin-bottom: 25px; border: 3px dashed #ffb3b3;
+        }
+
+        .sticker-chart {
+            display: flex; flex-direction: column; gap: 12px; margin-bottom: 25px;
+            background: #fff9f5; padding: 20px; border-radius: 20px;
+            border: 3px dashed #ffdac4; text-align: left;
+        }
+
+        .sticker-row { display: flex; align-items: center; min-height: 45px; border-bottom: 1px solid #ffe8d6; padding-bottom: 8px; }
+        .sticker-row:last-child { border-bottom: none; padding-bottom: 0; }
+        .sticker-label { font-size: 18px; font-weight: 800; width: 170px; display: flex; align-items: center; gap: 8px; }
+        .count-text { font-size: 22px; font-weight: bold; color: #888; width: 35px; }
+        .sticker-area { display: flex; gap: 5px; flex-wrap: wrap; flex-grow: 1; }
+
+        .mini-heart { width: 30px; height: 30px; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; opacity: 0; transform: scale(0); }
+        @keyframes popIn { to { opacity: 1; transform: scale(1); } }
+
+        .analysis-text {
+            font-size: 22px; font-weight: 800; line-height: 1.5; margin-bottom: 25px;
+            background: #e6f7ff; padding: 20px; border-radius: 25px; color: #3b82f6;
+        }
+
+        #close-summary { background: #d1d1d1; color: #333; box-shadow: none; }
+        #close-summary:hover { background: #b0b0b0; }
+
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="scenario-badge" id="scenario-badge">任務 1 / 6 (Task 1 of 6)</div>
+    </div>
+
+    <!-- ================= PART 1 (Always Visible) ================= -->
+    <div class="question-box">
+        <p class="zh-question">💭 根據圖片，你會做什麼呢？</p>
+        <p class="en-question">According to the photos there, what would you do?</p>
+    </div>
+
+    <div class="photo-container">
+        <img id="scenario-image" src="" alt="Scenario Photo">
+        <div class="draw-text-overlay">隨機抽取圖片中...</div>
+    </div>
+
+    <!-- Button to reveal Part 2 -->
+    <button id="reveal-btn">學生回答後，顯示愛心選項 💖<br><span style="font-size: 16px;">Show Options</span></button>
+
+
+    <!-- ================= PART 2 (Hidden until reveal-btn is clicked) ================= -->
+    <div id="task-2-section">
+        <div class="question-box">
+            <p class="zh-question">❤️ 他的行為表達了哪一種愛呢？</p>
+            <p class="en-question">What kind of love did he show?</p>
+        </div>
+
+        <div class="hearts-wrapper">
+            <div class="heart-box" data-id="companion" data-freq="261.63" style="--heart-color: var(--color-companion);">
+                <svg viewBox="0 0 32 29.6"><path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2 c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z"/></svg>
+                <div class="heart-text">
+                    <span class="en-text">Companionship</span>
+                    <span class="zh-text">陪伴</span>
+                    <span class="emoji">🧑‍🤝‍🧑</span>
+                </div>
+            </div>
+            <div class="heart-box" data-id="action" data-freq="293.66" style="--heart-color: var(--color-action);">
+                <svg viewBox="0 0 32 29.6"><path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2 c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z"/></svg>
+                <div class="heart-text">
+                    <span class="en-text">Action</span>
+                    <span class="zh-text">行動</span>
+                    <span class="emoji">🏃</span>
+                </div>
+            </div>
+            <div class="heart-box" data-id="speech" data-freq="329.63" style="--heart-color: var(--color-speech);">
+                <svg viewBox="0 0 32 29.6"><path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2 c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z"/></svg>
+                <div class="heart-text">
+                    <span class="en-text">Speech</span>
+                    <span class="zh-text">說話</span>
+                    <span class="emoji">👄</span>
+                </div>
+            </div>
+            <div class="heart-box" data-id="gifts" data-freq="392.00" style="--heart-color: var(--color-gifts);">
+                <svg viewBox="0 0 32 29.6"><path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2 c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z"/></svg>
+                <div class="heart-text">
+                    <span class="en-text">Gifts</span>
+                    <span class="zh-text">禮物</span>
+                    <span class="emoji">🎁</span>
+                </div>
+            </div>
+            <div class="heart-box" data-id="contact" data-freq="440.00" style="--heart-color: var(--color-contact);">
+                <svg viewBox="0 0 32 29.6"><path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2 c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z"/></svg>
+                <div class="heart-text">
+                    <span class="en-text">Contact</span>
+                    <span class="zh-text">接觸</span>
+                    <span class="emoji">🫂</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button id="next-btn">下一題 Next Task</button>
+            <button id="summary-btn">看結果 Show Summary</button>
+        </div>
+    </div>
+    <!-- ======================================================================= -->
+
+    <!-- Summary Overlay -->
+    <div id="summary-overlay">
+        <div class="summary-content">
+            <h2>✨ 你的愛心收集箱 ✨<br>Your Heart Collection Box</h2>
+            <div class="total-score-box" id="total-score-box">總共收集了 0 顆愛心！(Total: 0)</div>
+            
+            <div class="sticker-chart">
+                <div class="sticker-row"><div class="sticker-label" style="color: #4da665">🧑‍🤝‍🧑 陪伴 (Companion)</div><div class="count-text" id="count-companion">0</div><div class="sticker-area" id="stickers-companion"></div></div>
+                <div class="sticker-row"><div class="sticker-label" style="color: #bfae00">🏃 行動 (Action)</div><div class="count-text" id="count-action">0</div><div class="sticker-area" id="stickers-action"></div></div>
+                <div class="sticker-row"><div class="sticker-label" style="color: #31b38f">👄 說話 (Speech)</div><div class="count-text" id="count-speech">0</div><div class="sticker-area" id="stickers-speech"></div></div>
+                <div class="sticker-row"><div class="sticker-label" style="color: #9e75db">🎁 禮物 (Gifts)</div><div class="count-text" id="count-gifts">0</div><div class="sticker-area" id="stickers-gifts"></div></div>
+                <div class="sticker-row"><div class="sticker-label" style="color: #d17562">🫂 接觸 (Contact)</div><div class="count-text" id="count-contact">0</div><div class="sticker-area" id="stickers-contact"></div></div>
+            </div>
+
+            <div class="analysis-text" id="analysis-text">分析結果...</div>
+            <button id="close-summary">再玩一次 Play Again</button>
+        </div>
+    </div>
+
+    <script>
+        // All 7 Photos provided
+        const allPhotos = [
+            "https://i.postimg.cc/zvSF7kSp/add-a-glassess-on-the-202605090901.jpg",
+            "https://i.postimg.cc/90tYbBtB/delete-the-the-boy-202605091615.jpg",
+            "https://i.postimg.cc/cCMBhcM7/delete-the-thinking-bubble-202605091615.jpg",
+            "https://i.postimg.cc/NF7kDx7D/delete-this-items-in-red-202605090829.jpg",
+            "https://i.postimg.cc/prYJCBY6/Grandma-folding-clothes-in-livin-202605090808.jpg",
+            "https://i.postimg.cc/1XcrBKcH/the-robot-should-be-broken-202605091615.jpg",
+            "https://i.postimg.cc/sDQMFC6K/she-should-wear-the-short-202605091624.jpg"
+        ];
+
+        let gamePhotos = []; // Will hold exactly 6 unique photos for the game
+        let currentStepIndex = 0; // 0 to 5
+        let totalHeartsCollected = 0;
+        let scores = { companion: 0, action: 0, speech: 0, gifts: 0, contact: 0 };
+
+        // DOM Elements
+        const task2Section = document.getElementById('task-2-section');
+        const revealBtn = document.getElementById('reveal-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const summaryBtn = document.getElementById('summary-btn');
+        const badge = document.getElementById('scenario-badge');
+
+        function shuffleArray(array) {
+            let newArr = [...array];
+            for (let i = newArr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
+            }
+            return newArr;
+        }
+
+        // Initialize Game
+        function initGameData() {
+            // Shuffle and pick exactly 6 photos
+            gamePhotos = shuffleArray(allPhotos).slice(0, 6);
+            currentStepIndex = 0;
+            totalHeartsCollected = 0;
+            scores = { companion: 0, action: 0, speech: 0, gifts: 0, contact: 0 };
+        }
+
+        // Setup the UI for a new step
+        function loadStep() {
+            // Reset UI visibility
+            task2Section.style.display = 'none';
+            revealBtn.style.display = 'block';
+            nextBtn.style.display = 'none';
+            summaryBtn.style.display = 'none';
+            
+            resetHearts();
+            badge.innerText = `任務 ${currentStepIndex + 1} / 6 (Task ${currentStepIndex + 1} of 6)`;
+            
+            // Execute drawing animation
+            drawNextPhoto();
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Reveal the second part (Hearts)
+        revealBtn.addEventListener('click', () => {
+            revealBtn.style.display = 'none';
+            task2Section.style.display = 'flex';
+            
+            if (currentStepIndex === 5) {
+                summaryBtn.style.display = 'block';
+            } else {
+                nextBtn.style.display = 'block';
+            }
+
+            // Scroll down slightly so hearts are visible
+            setTimeout(() => {
+                window.scrollBy({ top: 400, behavior: 'smooth' });
+            }, 100);
+        });
+
+        // Draw Animation for current step
+        function drawNextPhoto() {
+            const imgEl = document.getElementById('scenario-image');
+            imgEl.classList.add('shuffling');
+            
+            let ticks = 0;
+            playTone(800); setTimeout(() => playTone(900), 100); setTimeout(() => playTone(1000), 200);
+
+            const interval = setInterval(() => {
+                imgEl.src = allPhotos[Math.floor(Math.random() * allPhotos.length)];
+                ticks++;
+                if (ticks >= 12) {
+                    clearInterval(interval);
+                    // Set the image strictly to the one designated for this step
+                    imgEl.src = gamePhotos[currentStepIndex]; 
+                    imgEl.classList.remove('shuffling');
+                    playTone(600); 
+                }
+            }, 50);
+        }
+
+        // --- Audio Setup ---
+        let audioCtx;
+        function playTone(frequency) {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            oscillator.type = 'sine';
+            oscillator.frequency.value = frequency;
+            
+            gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+            gainNode.gain.linearRampToValueAtTime(0.5, audioCtx.currentTime + 0.05); 
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.2); 
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            oscillator.start();
+            oscillator.stop(audioCtx.currentTime + 1.2);
+        }
+
+        function playMagicalSweep() {
+            const notes = [261.63, 329.63, 392.00, 523.25, 659.25];
+            notes.forEach((freq, index) => setTimeout(() => playTone(freq), index * 100));
+        }
+
+        // --- Interaction Logic ---
+        const hearts = document.querySelectorAll('.heart-box');
+        
+        hearts.forEach(heart => {
+            heart.addEventListener('click', function() {
+                const freq = parseFloat(this.getAttribute('data-freq'));
+                playTone(freq);
+                this.classList.toggle('selected');
+                this.classList.remove('bounce');
+                void this.offsetWidth; 
+                this.classList.add('bounce');
+            });
+        });
+
+        function saveCurrentSelections() {
+            document.querySelectorAll('.heart-box.selected').forEach(h => {
+                const id = h.getAttribute('data-id');
+                scores[id]++;
+                totalHeartsCollected++;
+            });
+        }
+
+        function resetHearts() {
+            hearts.forEach(heart => {
+                heart.classList.remove('selected');
+                heart.classList.remove('bounce');
+            });
+        }
+
+        // Next Button
+        nextBtn.addEventListener('click', () => {
+            saveCurrentSelections();
+            currentStepIndex++;
+            loadStep();
+        });
+
+        // Summary Button (Only available at step 6)
+        summaryBtn.addEventListener('click', () => {
+            saveCurrentSelections();
+            playMagicalSweep();
+            updateVisualization();
+            document.getElementById('summary-overlay').classList.add('active');
+        });
+
+        // Restart Button
+        document.getElementById('close-summary').addEventListener('click', () => {
+            document.getElementById('summary-overlay').classList.remove('active');
+            
+            // Clear chart
+            ['companion','action','speech','gifts','contact'].forEach(id => {
+                document.getElementById(`stickers-${id}`).innerHTML = '';
+                document.getElementById(`count-${id}`).innerText = '0';
+            });
+
+            // Re-initialize and load
+            initGameData();
+            loadStep();
+        });
+
+        // Results Chart Generation
+        const analysisData = {
+            companion: "太棒了！班上最常看見的愛是「陪伴」！🧑‍🤝‍🧑<br>大家都很喜歡和家人朋友一起度過美好的時光！",
+            action: "太棒了！班上最常看見的愛是「行動」！🏃<br>大家都很樂意互相幫忙，用行動表達愛！",
+            speech: "太棒了！班上最常看見的愛是「說話」！👄<br>大家都懂得用讚美和溫柔的話語鼓勵別人！",
+            gifts: "太棒了！班上最常看見的愛是「禮物」！🎁<br>大家都很用心準備小禮物來傳遞心意！",
+            contact: "太棒了！班上最常看見的愛是「接觸」！🫂<br>大家都喜歡用溫暖的擁抱來表達關心！"
+        };
+
+        function updateVisualization() {
+            let maxScore = 0;
+            let dominantId = 'companion';
+            const svgTemplate = `<svg viewBox="0 0 32 29.6" class="mini-heart"><path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2 c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z"/></svg>`;
+            const colorMap = { companion: 'var(--color-companion)', action: 'var(--color-action)', speech: 'var(--color-speech)', gifts: 'var(--color-gifts)', contact: 'var(--color-contact)' };
+
+            document.getElementById('total-score-box').innerText = `全班總共收集了 ${totalHeartsCollected} 顆愛心！(Total: ${totalHeartsCollected})`;
+
+            let idx = 0;
+            for (let id in scores) {
+                if (scores[id] > maxScore) { maxScore = scores[id]; dominantId = id; }
+                document.getElementById(`count-${id}`).innerText = scores[id];
+                const container = document.getElementById(`stickers-${id}`);
+                container.innerHTML = ''; 
+                
+                for(let i = 0; i < scores[id]; i++) {
+                    setTimeout(() => {
+                        const tempDiv = document.createElement('div');
+                        tempDiv.innerHTML = svgTemplate;
+                        const svgEl = tempDiv.firstChild;
+                        svgEl.style.fill = colorMap[id];
+                        container.appendChild(svgEl);
+                        if(i === 0) playTone(400 + (Math.random() * 200)); 
+                    }, i * 150 + (idx * 200)); 
+                }
+                idx++;
+            }
+
+            const textElement = document.getElementById('analysis-text');
+            if (maxScore === 0) {
+                textElement.innerHTML = "沒有收集到愛心哦！點擊「再玩一次」試試看吧！<br>(No hearts collected!)";
+            } else {
+                textElement.innerHTML = analysisData[dominantId];
+            }
+        }
+
+        // Start the game on load
+        setTimeout(() => {
+            initGameData();
+            loadStep();
+        }, 500);
+
+    </script>
+</body>
+</html>
