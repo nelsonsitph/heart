@@ -14,8 +14,8 @@
             --color-gifts: #cca8ff;     
             --color-contact: #ffaa99;   
             
-            /* Matched colors from your screenshot */
-            --bg-color: #fcf1eb; /* Soft peach background */
+            /* Matched colors */
+            --bg-color: #fcf1eb; 
             --title-pink: #d95a5a;
             --title-blue: #4b7299;
             --box-border: #ffb3b3;
@@ -36,24 +36,25 @@
             scroll-behavior: smooth;
         }
 
-        /* --- Header & Step Badge --- */
+        /* --- Header --- */
         .header {
             text-align: center;
             margin-bottom: 20px;
         }
 
-        .scenario-badge {
+        .main-title {
             display: inline-block;
             background: #ff9e9e;
             padding: 8px 30px;
             border-radius: 40px;
-            font-size: 22px;
+            font-size: 24px;
             font-weight: 800;
             color: #fff;
             box-shadow: 0 4px 10px rgba(255, 158, 158, 0.4);
+            margin-top: 10px;
         }
 
-        /* --- Styled Question Boxes (Matched to Screenshot) --- */
+        /* --- Styled Question Boxes --- */
         .question-box {
             background: #ffffff;
             border: 3px dashed var(--box-border);
@@ -79,83 +80,212 @@
             margin: 0;
         }
 
-        /* --- Photo Container --- */
-        .photo-container {
+        /* --- Photo Grid (Shows 4 photos in 2x2 layout) --- */
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            max-width: 800px;
             width: 90%;
-            max-width: 600px;
-            height: 350px;
+            margin-bottom: 40px;
+        }
+
+        .photo-item {
             background: white;
-            border-radius: 25px;
+            border-radius: 20px;
             padding: 15px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+            aspect-ratio: 4 / 3;
             display: flex;
             align-items: center;
             justify-content: center;
-            position: relative;
-            margin-bottom: 25px;
         }
 
-        #scenario-image {
+        .photo-item:hover {
+            transform: translateY(-5px) scale(1.03);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.12);
+        }
+
+        .photo-item img {
             width: 100%;
             height: 100%;
-            object-fit: contain; 
-            border-radius: 15px;
-            transition: filter 0.1s;
+            object-fit: cover; 
+            border-radius: 12px;
         }
 
-        .shuffling {
-            filter: blur(5px) brightness(1.1);
-            transform: scale(1.02);
-        }
-
-        .draw-text-overlay {
+        .expand-hint {
             position: absolute;
-            background: rgba(255, 179, 179, 0.9);
-            color: white;
-            font-size: 24px;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 16px;
             font-weight: bold;
-            padding: 15px 30px;
-            border-radius: 30px;
-            display: none;
-            z-index: 2;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            color: #d95a5a;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            pointer-events: none;
         }
 
-        .shuffling + .draw-text-overlay { display: block; }
+        @media (max-width: 600px) {
+            .photo-grid {
+                grid-template-columns: repeat(1, 1fr);
+            }
+        }
 
-        /* --- Section 2 (Hidden initially) --- */
-        #task-2-section {
-            display: none; /* Hidden until button click */
+        /* --- Main Screen Controls (Under Grid) --- */
+        .main-controls {
+            display: flex;
             flex-direction: column;
             align-items: center;
-            width: 100%;
-            animation: fadeIn 0.8s ease forwards;
+            gap: 15px;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+        .live-counter {
+            font-size: 22px;
+            font-weight: 800;
+            color: #d95a5a;
+            background: #ffe3e3;
+            padding: 10px 30px;
+            border-radius: 30px;
+            box-shadow: 0 3px 10px rgba(217, 90, 90, 0.2);
+            transition: transform 0.2s;
+        }
+
+        /* --- Buttons --- */
+        button {
+            padding: 15px 30px;
+            font-size: 20px;
+            font-weight: 800;
+            font-family: inherit;
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        button:active { transform: scale(0.95); }
+
+        #collect-btn { background-color: #64b5f6; }
+        #collect-btn:hover { background-color: #42a5f5; transform: translateY(-3px);}
+
+        #reset-hearts-btn { background-color: #ffb74d; }
+        #reset-hearts-btn:hover { background-color: #ffa726; transform: translateY(-3px);}
+        
+        #summary-btn {
+            background: linear-gradient(45deg, #ffaa33, #ff5c5c);
+            font-size: 24px;
+            padding: 15px 40px;
+        }
+        #summary-btn:hover { transform: translateY(-3px);}
+
+        /* --- Image Expand Modal (FULL SCREEN Layout) --- */
+        .image-modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: var(--bg-color); /* Matches the main background */
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .image-modal.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-card {
+            width: 100vw;
+            height: 100vh;
+            padding: 50px 20px 30px 20px; /* Extra top padding for close button */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-y: auto;
+            position: relative;
+            box-sizing: border-box;
+            transform: scale(0.95);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .image-modal.active .modal-card {
+            transform: scale(1);
+        }
+
+        /* Fixed Close Button for Fullscreen */
+        .modal-close {
+            position: fixed;
+            top: 15px;
+            right: 25px;
+            color: #d95a5a;
+            font-size: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+            z-index: 2010;
+            background: rgba(255,255,255,0.7);
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .modal-close:hover {
+            transform: scale(1.1);
+            background: rgba(255,255,255,1);
+        }
+
+        #expanded-img {
+            max-height: 55vh; /* Much larger image */
+            max-width: 100%;
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+            margin-bottom: 25px;
+            object-fit: contain;
+            background: white;
+            padding: 10px;
+        }
+
+        .modal-card .question-box {
+            padding: 10px 30px;
+            margin-bottom: 20px;
+            max-width: 800px;
+            width: 90%;
         }
 
         /* --- Hearts Container --- */
         .hearts-wrapper {
             display: flex;
-            gap: 20px;
-            margin-top: 10px;
+            gap: 15px;
             margin-bottom: 30px;
             flex-wrap: wrap;
             justify-content: center;
+            width: 100%;
             max-width: 900px;
         }
 
         .heart-box {
             position: relative;
-            width: 130px;
-            height: 130px;
+            width: 115px;
+            height: 115px;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             transform: scale(0.9);
-            opacity: 0.6;
+            opacity: 0.7;
         }
 
         .heart-box svg {
@@ -179,63 +309,34 @@
             text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 5px rgba(255, 255, 255, 0.9);
         }
 
-        .en-text { font-size: 14px; font-weight: 800; color: #333; margin-bottom: -2px; }
-        .zh-text { font-size: 22px; font-weight: 800; color: #333; }
-        .emoji { font-size: 20px; margin-top: 2px; }
+        .en-text { font-size: 13px; font-weight: 800; color: #333; margin-bottom: -2px; }
+        .zh-text { font-size: 20px; font-weight: 800; color: #333; }
+        .emoji { font-size: 18px; margin-top: 2px; }
 
-        /* --- Active States --- */
-        .heart-box.selected { transform: scale(1.1); opacity: 1; z-index: 5; }
-        .heart-box.selected svg { filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2)) drop-shadow(0 0 20px var(--heart-color)); }
+        /* Active States */
+        .heart-box.selected { transform: scale(1.15); opacity: 1; z-index: 5; }
+        .heart-box.selected svg { filter: drop-shadow(0 10px 15px rgba(0,0,0,0.2)) drop-shadow(0 0 15px var(--heart-color)); }
         .bounce { animation: pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 
         @keyframes pop {
-            0% { transform: scale(1.1); }
-            50% { transform: scale(1.3); }
-            100% { transform: scale(1.1); }
+            0% { transform: scale(1.15); }
+            50% { transform: scale(1.35); }
+            100% { transform: scale(1.15); }
         }
 
-        /* --- Controls --- */
-        .controls { 
-            display: flex; 
-            gap: 20px; 
-            z-index: 10; 
-            margin-bottom: 20px;
+        .modal-controls {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding-bottom: 40px;
         }
 
-        button {
-            padding: 15px 35px;
-            font-size: 22px;
-            font-weight: 800;
-            font-family: inherit;
-            color: #fff;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
-        }
-
-        button:active { transform: scale(0.95); }
-
-        /* The Big Reveal Button */
-        #reveal-btn { background-color: #ff85a2; }
-        #reveal-btn:hover { background-color: #ff6b8f; transform: translateY(-3px);}
-
-        /* Next / Summary Buttons */
-        #next-btn { background-color: #64b5f6; display: none; }
-        #next-btn:hover { background-color: #42a5f5; transform: translateY(-3px);}
-        
-        #summary-btn {
-            background: linear-gradient(45deg, #ffaa33, #ff5c5c);
-            display: none; 
-        }
-        #summary-btn:hover { transform: translateY(-3px);}
-
-        /* --- Summary Overlay (Kept the same) --- */
+        /* --- Summary Overlay --- */
         #summary-overlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: rgba(252, 241, 235, 0.95);
-            z-index: 1000; display: flex; flex-direction: column;
+            z-index: 3000; display: flex; flex-direction: column;
             justify-content: center; align-items: center;
             opacity: 0; pointer-events: none; transition: opacity 0.5s ease;
             backdrop-filter: blur(5px); overflow-y: auto;
@@ -288,76 +389,86 @@
 <body>
 
     <div class="header">
-        <div class="scenario-badge" id="scenario-badge">任務 1 / 6 (Task 1 of 6)</div>
+        <div class="main-title">愛的表達方式 (Ways to Express Love)</div>
     </div>
 
     <div class="question-box">
-        <p class="zh-question">💭 根據圖片，你會做什麼呢？</p>
-        <p class="en-question">According to the photos there, what would you do?</p>
+        <p class="zh-question">💭 點擊圖片放大討論，然後選擇愛心</p>
+        <p class="en-question">Click any photo to expand and select hearts.</p>
     </div>
 
-    <div class="photo-container">
-        <img id="scenario-image" src="" alt="Scenario Photo">
-        <div class="draw-text-overlay">隨機抽取圖片中...</div>
+    <!-- Grid showing the 4 photos -->
+    <div class="photo-grid" id="photo-grid">
+        <!-- Photos injected via JavaScript -->
     </div>
 
-    <button id="reveal-btn">學生回答後，顯示愛心選項 💖<br><span style="font-size: 16px;">Show Options</span></button>
+    <!-- Main Screen Controls -->
+    <div class="main-controls">
+        <div class="live-counter" id="live-counter">目前已收集：0 顆愛心</div>
+        <button id="summary-btn">📊 看結果 Show Summary</button>
+    </div>
 
+    <!-- Image Expand Modal Overlay (FULL SCREEN) -->
+    <div class="image-modal" id="image-modal">
+        <div class="modal-card">
+            <span class="modal-close" id="close-modal">&times;</span>
+            <img id="expanded-img" src="" alt="Expanded Photo">
+            
+            <div class="question-box">
+                <p class="zh-question" style="font-size: 24px; margin:0;">❤️ 他表達了哪一種愛呢？(可多選)</p>
+            </div>
 
-    <div id="task-2-section">
-        <div class="question-box">
-            <p class="zh-question">❤️ 他的行為表達了哪一種愛呢？</p>
-            <p class="en-question">What kind of love did he show?</p>
-        </div>
+            <div class="hearts-wrapper">
+                <div class="heart-box" data-id="companion" data-freq="261.63" style="--heart-color: var(--color-companion);">
+                    <svg viewBox="0 0 32 29.6"><path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2 c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z"/></svg>
+                    <div class="heart-text">
+                        <span class="en-text">Companionship</span>
+                        <span class="zh-text">陪伴</span>
+                        <span class="emoji">🧑‍🤝‍🧑</span>
+                    </div>
+                </div>
+                <div class="heart-box" data-id="action" data-freq="293.66" style="--heart-color: var(--color-action);">
+                    <svg viewBox="0 0 32 29.6"><path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2 c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z"/></svg>
+                    <div class="heart-text">
+                        <span class="en-text">Action</span>
+                        <span class="zh-text">行動</span>
+                        <span class="emoji">🏃</span>
+                    </div>
+                </div>
+                <div class="heart-box" data-id="speech" data-freq="329.63" style="--heart-color: var(--color-speech);">
+                    <svg viewBox="0 0 32 29.6"><path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2 c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z"/></svg>
+                    <div class="heart-text">
+                        <span class="en-text">Speech</span>
+                        <span class="zh-text">說話</span>
+                        <span class="emoji">👄</span>
+                    </div>
+                </div>
+                <div class="heart-box" data-id="gifts" data-freq="392.00" style="--heart-color: var(--color-gifts);">
+                    <svg viewBox="0 0 32 29.6"><path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2 c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z"/></svg>
+                    <div class="heart-text">
+                        <span class="en-text">Gifts</span>
+                        <span class="zh-text">禮物</span>
+                        <span class="emoji">🎁</span>
+                    </div>
+                </div>
+                <div class="heart-box" data-id="contact" data-freq="440.00" style="--heart-color: var(--color-contact);">
+                    <svg viewBox="0 0 32 29.6"><path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2 c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z"/></svg>
+                    <div class="heart-text">
+                        <span class="en-text">Contact</span>
+                        <span class="zh-text">接觸</span>
+                        <span class="emoji">🖐️</span>
+                    </div>
+                </div>
+            </div>
 
-        <div class="hearts-wrapper">
-            <div class="heart-box" data-id="companion" data-freq="261.63" style="--heart-color: var(--color-companion);">
-                <svg viewBox="0 0 32 29.6"><path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2 c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z"/></svg>
-                <div class="heart-text">
-                    <span class="en-text">Companionship</span>
-                    <span class="zh-text">陪伴</span>
-                    <span class="emoji">🧑‍🤝‍🧑</span>
-                </div>
+            <div class="modal-controls">
+                <button id="reset-hearts-btn">🔄 重選 Reset</button>
+                <button id="collect-btn">📥 加入收集箱 Collect</button>
             </div>
-            <div class="heart-box" data-id="action" data-freq="293.66" style="--heart-color: var(--color-action);">
-                <svg viewBox="0 0 32 29.6"><path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2 c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z"/></svg>
-                <div class="heart-text">
-                    <span class="en-text">Action</span>
-                    <span class="zh-text">行動</span>
-                    <span class="emoji">🏃</span>
-                </div>
-            </div>
-            <div class="heart-box" data-id="speech" data-freq="329.63" style="--heart-color: var(--color-speech);">
-                <svg viewBox="0 0 32 29.6"><path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2 c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z"/></svg>
-                <div class="heart-text">
-                    <span class="en-text">Speech</span>
-                    <span class="zh-text">說話</span>
-                    <span class="emoji">👄</span>
-                </div>
-            </div>
-            <div class="heart-box" data-id="gifts" data-freq="392.00" style="--heart-color: var(--color-gifts);">
-                <svg viewBox="0 0 32 29.6"><path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2 c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z"/></svg>
-                <div class="heart-text">
-                    <span class="en-text">Gifts</span>
-                    <span class="zh-text">禮物</span>
-                    <span class="emoji">🎁</span>
-                </div>
-            </div>
-            <div class="heart-box" data-id="contact" data-freq="440.00" style="--heart-color: var(--color-contact);">
-                <svg viewBox="0 0 32 29.6"><path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2 c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z"/></svg>
-                <div class="heart-text">
-                    <span class="en-text">Contact</span>
-                    <span class="zh-text">接觸</span>
-                    <span class="emoji">🖐️</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="controls">
-            <button id="next-btn">下一題 Next Task</button>
-            <button id="summary-btn">看結果 Show Summary</button>
         </div>
     </div>
+
+    <!-- Summary Chart Modal -->
     <div id="summary-overlay">
         <div class="summary-content">
             <h2>✨ 你的愛心收集箱 ✨<br>Your Heart Collection Box</h2>
@@ -377,28 +488,27 @@
     </div>
 
     <script>
-        // All 7 Photos provided
+        // The 4 requested photos
         const allPhotos = [
-            "https://i.postimg.cc/zvSF7kSp/add-a-glassess-on-the-202605090901.jpg",
-            "https://i.postimg.cc/90tYbBtB/delete-the-the-boy-202605091615.jpg",
-            "https://i.postimg.cc/cCMBhcM7/delete-the-thinking-bubble-202605091615.jpg",
-            "https://i.postimg.cc/NF7kDx7D/delete-this-items-in-red-202605090829.jpg",
             "https://i.postimg.cc/prYJCBY6/Grandma-folding-clothes-in-livin-202605090808.jpg",
-            "https://i.postimg.cc/1XcrBKcH/the-robot-should-be-broken-202605091615.jpg",
-            "https://i.postimg.cc/sDQMFC6K/she-should-wear-the-short-202605091624.jpg"
+            "https://i.postimg.cc/NF7kDx7D/delete-this-items-in-red-202605090829.jpg",
+            "https://i.postimg.cc/zvSF7kSp/add-a-glassess-on-the-202605090901.jpg",
+            "https://i.postimg.cc/fy6VpsYP/Sister-falls-in-park-hurt-202605112215.jpg"
         ];
 
-        let gamePhotos = []; // Will hold exactly 6 unique photos for the game
-        let currentStepIndex = 0; // 0 to 5
         let totalHeartsCollected = 0;
         let scores = { companion: 0, action: 0, speech: 0, gifts: 0, contact: 0 };
 
         // DOM Elements
-        const task2Section = document.getElementById('task-2-section');
-        const revealBtn = document.getElementById('reveal-btn');
-        const nextBtn = document.getElementById('next-btn');
+        const photoGrid = document.getElementById('photo-grid');
+        const imageModal = document.getElementById('image-modal');
+        const expandedImg = document.getElementById('expanded-img');
+        const closeModalBtn = document.getElementById('close-modal');
+        
+        const resetHeartsBtn = document.getElementById('reset-hearts-btn');
+        const collectBtn = document.getElementById('collect-btn');
         const summaryBtn = document.getElementById('summary-btn');
-        const badge = document.getElementById('scenario-badge');
+        const liveCounter = document.getElementById('live-counter');
 
         function shuffleArray(array) {
             let newArr = [...array];
@@ -409,70 +519,43 @@
             return newArr;
         }
 
-        // Initialize Game
+        // Initialize Game Grid
         function initGameData() {
-            // Shuffle and pick exactly 6 photos
-            gamePhotos = shuffleArray(allPhotos).slice(0, 6);
-            currentStepIndex = 0;
             totalHeartsCollected = 0;
             scores = { companion: 0, action: 0, speech: 0, gifts: 0, contact: 0 };
+            updateLiveCounter();
+            
+            // Randomly shuffle the 4 photos and inject into the grid
+            const gamePhotos = shuffleArray(allPhotos);
+            photoGrid.innerHTML = ''; 
+            
+            gamePhotos.forEach(src => {
+                const item = document.createElement('div');
+                item.className = 'photo-item';
+                item.innerHTML = `
+                    <img src="${src}" alt="Scenario Photo">
+                    <div class="expand-hint">🔍 放大選愛心</div>
+                `;
+                
+                // Click to expand modal
+                item.addEventListener('click', () => {
+                    expandedImg.src = src;
+                    resetHeartsUI(); // Ensure hearts are fresh when opening a new image
+                    imageModal.classList.add('active');
+                });
+                
+                photoGrid.appendChild(item);
+            });
+            
+            resetHeartsUI();
         }
 
-        // Setup the UI for a new step
-        function loadStep() {
-            // Reset UI visibility
-            task2Section.style.display = 'none';
-            revealBtn.style.display = 'block';
-            nextBtn.style.display = 'none';
-            summaryBtn.style.display = 'none';
-            
-            resetHearts();
-            badge.innerText = `任務 ${currentStepIndex + 1} / 6 (Task ${currentStepIndex + 1} of 6)`;
-            
-            // Execute drawing animation
-            drawNextPhoto();
-            
-            // Scroll to top
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+        // --- Image Modal Close Logic ---
+        function closeModal() {
+            imageModal.classList.remove('active');
         }
 
-        // Reveal the second part (Hearts)
-        revealBtn.addEventListener('click', () => {
-            revealBtn.style.display = 'none';
-            task2Section.style.display = 'flex';
-            
-            if (currentStepIndex === 5) {
-                summaryBtn.style.display = 'block';
-            } else {
-                nextBtn.style.display = 'block';
-            }
-
-            // Scroll down slightly so hearts are visible
-            setTimeout(() => {
-                window.scrollBy({ top: 400, behavior: 'smooth' });
-            }, 100);
-        });
-
-        // Draw Animation for current step
-        function drawNextPhoto() {
-            const imgEl = document.getElementById('scenario-image');
-            imgEl.classList.add('shuffling');
-            
-            let ticks = 0;
-            playTone(800); setTimeout(() => playTone(900), 100); setTimeout(() => playTone(1000), 200);
-
-            const interval = setInterval(() => {
-                imgEl.src = allPhotos[Math.floor(Math.random() * allPhotos.length)];
-                ticks++;
-                if (ticks >= 12) {
-                    clearInterval(interval);
-                    // Set the image strictly to the one designated for this step
-                    imgEl.src = gamePhotos[currentStepIndex]; 
-                    imgEl.classList.remove('shuffling');
-                    playTone(600); 
-                }
-            }, 50);
-        }
+        closeModalBtn.addEventListener('click', closeModal);
 
         // --- Audio Setup ---
         let audioCtx;
@@ -500,7 +583,12 @@
             notes.forEach((freq, index) => setTimeout(() => playTone(freq), index * 100));
         }
 
-        // --- Interaction Logic ---
+        function playSuccessChime() {
+            playTone(523.25); 
+            setTimeout(() => playTone(659.25), 100); 
+        }
+
+        // --- Heart Interaction Logic ---
         const hearts = document.querySelectorAll('.heart-box');
         
         hearts.forEach(heart => {
@@ -514,52 +602,74 @@
             });
         });
 
-        function saveCurrentSelections() {
-            document.querySelectorAll('.heart-box.selected').forEach(h => {
-                const id = h.getAttribute('data-id');
-                scores[id]++;
-                totalHeartsCollected++;
-            });
-        }
-
-        function resetHearts() {
+        function resetHeartsUI() {
             hearts.forEach(heart => {
                 heart.classList.remove('selected');
                 heart.classList.remove('bounce');
             });
         }
 
-        // Next Button
-        nextBtn.addEventListener('click', () => {
-            saveCurrentSelections();
-            currentStepIndex++;
-            loadStep();
+        function updateLiveCounter() {
+            liveCounter.innerText = `目前已收集：${totalHeartsCollected} 顆愛心`;
+        }
+
+        // Save current selection to memory
+        function saveCurrentSelections() {
+            const selected = document.querySelectorAll('.heart-box.selected');
+            if (selected.length === 0) return false; 
+
+            selected.forEach(h => {
+                const id = h.getAttribute('data-id');
+                scores[id]++;
+                totalHeartsCollected++;
+            });
+            return true;
+        }
+
+        // Reset Button (inside Modal)
+        resetHeartsBtn.addEventListener('click', () => {
+            resetHeartsUI();
+            playTone(200); 
         });
 
-        // Summary Button (Only available at step 6)
+        // Collect Button (inside Modal)
+        collectBtn.addEventListener('click', () => {
+            if (saveCurrentSelections()) {
+                playSuccessChime();
+                updateLiveCounter();
+                
+                // Pop effect for the counter on main screen
+                liveCounter.style.transform = 'scale(1.15)';
+                setTimeout(() => liveCounter.style.transform = 'scale(1)', 300);
+                
+                // Close modal after collecting
+                closeModal();
+            }
+        });
+
+        // Summary Button (Main Screen)
         summaryBtn.addEventListener('click', () => {
-            saveCurrentSelections();
             playMagicalSweep();
             updateVisualization();
             document.getElementById('summary-overlay').classList.add('active');
         });
 
-        // Restart Button
+        // Play Again Button (Close Summary)
         document.getElementById('close-summary').addEventListener('click', () => {
             document.getElementById('summary-overlay').classList.remove('active');
             
-            // Clear chart
+            // Clear chart visually
             ['companion','action','speech','gifts','contact'].forEach(id => {
                 document.getElementById(`stickers-${id}`).innerHTML = '';
                 document.getElementById(`count-${id}`).innerText = '0';
             });
 
-            // Re-initialize and load
+            // Re-initialize grid and scores
             initGameData();
-            loadStep();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
 
-        // Results Chart Generation
+        // --- Results Chart Generation ---
         const analysisData = {
             companion: "太棒了！班上最常看見的愛是「陪伴」！🧑‍🤝‍🧑<br>大家都很喜歡和家人朋友一起度過美好的時光！",
             action: "太棒了！班上最常看見的愛是「行動」！🏃<br>大家都很樂意互相幫忙，用行動表達愛！",
@@ -607,8 +717,7 @@
         // Start the game on load
         setTimeout(() => {
             initGameData();
-            loadStep();
-        }, 500);
+        }, 300);
 
     </script>
 </body>
