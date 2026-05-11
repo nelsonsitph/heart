@@ -9,8 +9,8 @@
 
         :root {
             --color-companion: #7aff99;
-            --color-action: #ffea00;    
-            --color-speech: #66ffcc;    
+            --color-action: #ffea00;  
+            --color-speech: #66ffcc;  
             --color-gifts: #cca8ff;     
             --color-contact: #ffaa99;   
             
@@ -291,7 +291,6 @@
         <div class="scenario-badge" id="scenario-badge">任務 1 / 6 (Task 1 of 6)</div>
     </div>
 
-    <!-- ================= PART 1 (Always Visible) ================= -->
     <div class="question-box">
         <p class="zh-question">💭 根據圖片，你會做什麼呢？</p>
         <p class="en-question">According to the photos there, what would you do?</p>
@@ -302,11 +301,9 @@
         <div class="draw-text-overlay">隨機抽取圖片中...</div>
     </div>
 
-    <!-- Button to reveal Part 2 -->
     <button id="reveal-btn">學生回答後，顯示愛心選項 💖<br><span style="font-size: 16px;">Show Options</span></button>
 
 
-    <!-- ================= PART 2 (Hidden until reveal-btn is clicked) ================= -->
     <div id="task-2-section">
         <div class="question-box">
             <p class="zh-question">❤️ 他的行為表達了哪一種愛呢？</p>
@@ -351,7 +348,7 @@
                 <div class="heart-text">
                     <span class="en-text">Contact</span>
                     <span class="zh-text">接觸</span>
-                    <span class="emoji">🫂</span>
+                    <span class="emoji">🖐️</span>
                 </div>
             </div>
         </div>
@@ -361,9 +358,6 @@
             <button id="summary-btn">看結果 Show Summary</button>
         </div>
     </div>
-    <!-- ======================================================================= -->
-
-    <!-- Summary Overlay -->
     <div id="summary-overlay">
         <div class="summary-content">
             <h2>✨ 你的愛心收集箱 ✨<br>Your Heart Collection Box</h2>
@@ -374,7 +368,7 @@
                 <div class="sticker-row"><div class="sticker-label" style="color: #bfae00">🏃 行動 (Action)</div><div class="count-text" id="count-action">0</div><div class="sticker-area" id="stickers-action"></div></div>
                 <div class="sticker-row"><div class="sticker-label" style="color: #31b38f">👄 說話 (Speech)</div><div class="count-text" id="count-speech">0</div><div class="sticker-area" id="stickers-speech"></div></div>
                 <div class="sticker-row"><div class="sticker-label" style="color: #9e75db">🎁 禮物 (Gifts)</div><div class="count-text" id="count-gifts">0</div><div class="sticker-area" id="stickers-gifts"></div></div>
-                <div class="sticker-row"><div class="sticker-label" style="color: #d17562">🫂 接觸 (Contact)</div><div class="count-text" id="count-contact">0</div><div class="sticker-area" id="stickers-contact"></div></div>
+                <div class="sticker-row"><div class="sticker-label" style="color: #d17562">🖐️ 接觸 (Contact)</div><div class="count-text" id="count-contact">0</div><div class="sticker-area" id="stickers-contact"></div></div>
             </div>
 
             <div class="analysis-text" id="analysis-text">分析結果...</div>
@@ -571,7 +565,7 @@
             action: "太棒了！班上最常看見的愛是「行動」！🏃<br>大家都很樂意互相幫忙，用行動表達愛！",
             speech: "太棒了！班上最常看見的愛是「說話」！👄<br>大家都懂得用讚美和溫柔的話語鼓勵別人！",
             gifts: "太棒了！班上最常看見的愛是「禮物」！🎁<br>大家都很用心準備小禮物來傳遞心意！",
-            contact: "太棒了！班上最常看見的愛是「接觸」！🫂<br>大家都喜歡用溫暖的擁抱來表達關心！"
+            contact: "太棒了！班上最常看見的愛是「接觸」！🖐️<br>大家都喜歡用溫暖的擁抱來表達關心！"
         };
 
         function updateVisualization() {
